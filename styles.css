@@ -1,3 +1,5 @@
+/* page */
+
 * {
     margin: 0;
     padding: 0;
@@ -50,6 +52,8 @@ main{
     margin: 0 auto;
 }
 
+/* form */
+
 .recipe-form{
     display: flex;
     flex-direction: row;
@@ -80,5 +84,62 @@ main{
 
 .recipe-form button:hover{
     background-color: #2a2ab0;
+    box-shadow: 0 4px 8px rgba(54, 54, 198, 0.2);
+}
+
+/* recipe list */ 
+
+.h2 {
+    font-family: "Vend Sans", sans-serif;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    color: #3636c6;
+}
+
+.ingredients-list {
+    margin-top: 25px;
+    list-style-type: disc;
+    padding-left: 20px;
+    margin-bottom: 30px;
+}
+
+.ingredients-list li {
+    margin-bottom: 10px;
+}
+
+.generate-recipe-container {
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px;
+    border: 2px dashed #3636c6;
+    border-radius: 10px;
+    background-color: #f0f0ff;
+}
+
+.generate-recipe-container h3 {
+    margin-bottom: 10px;
+    color: #3636c6;
+}
+
+.generate-recipe-container p {
+    margin-bottom: 20px;
+    color: #555;
+}
+
+.generate-recipe-container button {
+    padding: 10px   20px;
+    font-size: 1.1rem;
+    background-color: #cf0818;
+    color: #fff;
+    border: none;       
+    border-radius: 7px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.generate-recipe-container button:hover {
+    background-color: #a72635;      
     box-shadow: 0 4px 8px rgba(54, 54, 198, 0.2);
 }
