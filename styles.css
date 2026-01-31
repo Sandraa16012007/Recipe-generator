@@ -143,3 +143,56 @@ main{
     background-color: #a72635;      
     box-shadow: 0 4px 8px rgba(54, 54, 198, 0.2);
 }
+
+/* suggested recipe */
+
+.suggested-recipe-section {
+    margin-top: 50px;
+    padding: 20px;
+    border: 2px solid #3636c6;
+    border-radius: 10px;
+    background-color: #f0f0ff;
+}
+
+.suggested-recipe-section h2 {
+    color: #3636c6;
+    margin-bottom: 15px;
+    font-size: 2rem;
+}
+
+.suggested-recipe-section h4 {
+    margin-top: 15px;
+    color: #3636c6;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.suggested-recipe-section h3 {
+    margin-top: 15px;
+    color:#cf0818;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+}
+
+.suggested-recipe-section p {
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+.suggested-recipe-section ol {
+    margin-left: 20px;
+}
+
+.suggested-recipe-section ol li {
+    margin-bottom: 10px;
+}
+
+.suggested-recipe-section ul {
+    margin-left: 20px;
+}
+
+.suggested-recipe-section ul li {
+    margin-bottom: 10px;
+}
+ 
+
