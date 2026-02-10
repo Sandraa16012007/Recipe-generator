@@ -5,40 +5,39 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: "Method not allowed" });
     }
 
-    const { ingredients } = req.body;
-
-    if (!ingredients || ingredients.length === 0) {
-        return res.status(400).json({ error: "No ingredients provided" });
-    }
-
     try {
-        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+        const { ingredients } = req.body;
 
-        const model = genAI.getGenerativeModel({
-            model: "gemini-1.5-flash",
-        });
+        if (!ingredients || ingredients.length === 0) {
+            return res.status(400).json({ error: "No ingredients provided" });
+        }
 
-        const prompt = `
-I have these ingredients:
-${ingredients.join(", ")}
+        const prompt = `I have these ingredients: ${ingredients.join(
+            ", "
+        )}. Suggest a simple recipe in markdown format.`;
 
-Create a simple, clear recipe.
-Include:
-- Dish name
-- Ingredients
-- Step-by-step instructions
-`;
+        const response = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }],
+                }),
+            }
+        );
 
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const text = response.text();
+        const data = await response.json();
 
-        res.status(200).json({ recipe: text });
+        const recipe =
+            data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+            "⚠️ No recipe generated.";
 
-    } catch (err) {
-        console.error("Gemini error:", err);
+        res.status(200).json({ recipe });
+    } catch (error) {
+        console.error("Gemini error:", error);
         res.status(500).json({
-            recipe: "⚠️ Failed to generate recipe. Please try again.",
+            recipe: "⚠️ Something went wrong. Please try again.",
         });
     }
 }
