@@ -12,9 +12,18 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: "No ingredients provided" });
         }
 
-        const prompt = `I have these ingredients: ${ingredients.join(
-            ", "
-        )}. Suggest a simple recipe in markdown format.`;
+        const prompt = `
+            You are a helpful cooking assistant.
+
+            Using the following ingredients:
+            ${ingredients.join(", ")}
+
+            Generate ONE clear, easy recipe.
+            Include:
+            - Recipe name
+            - Ingredients list
+            - Step-by-step instructions
+            `;
 
         const response = await fetch(
             `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`,
@@ -31,9 +40,14 @@ export default async function handler(req, res) {
         console.log("Gemini raw response:", JSON.stringify(data, null, 2));
 
 
-        const recipe =
-            data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-            "⚠️ No recipe generated.";
+        let recipe = "⚠️ No recipe generated.";
+
+        if (data?.candidates?.length) {
+            const parts = data.candidates[0]?.content?.parts;
+            if (Array.isArray(parts)) {
+                recipe = parts.map(p => p.text).join("\n");
+            }
+        }
 
         res.status(200).json({ recipe });
     } catch (error) {
