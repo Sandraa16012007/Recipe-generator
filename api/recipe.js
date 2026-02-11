@@ -1,6 +1,8 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export default async function handler(req, res) {
+    console.log("API KEY EXISTS:", !!process.env.GEMINI_API_KEY);
+
     if (req.method !== "POST") {
         return res.status(405).json({ error: "Method not allowed" });
     }
@@ -15,7 +17,7 @@ export default async function handler(req, res) {
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
         const model = genAI.getGenerativeModel({
-            model: "gemini-1.5-flash",
+            model: "models/gemini-1.5-flash",
         });
 
         const prompt = `
@@ -32,7 +34,9 @@ Ingredients:
 Steps:
 `;
 
+        console.log("Sending prompt to Gemini...");
         const result = await model.generateContent(prompt);
+        console.log("Gemini responded");
         const response = result.response;
         const text = response.text();
 
