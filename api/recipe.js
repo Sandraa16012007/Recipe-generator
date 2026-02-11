@@ -12,44 +12,37 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: "No ingredients provided" });
         }
 
+        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+        const model = genAI.getGenerativeModel({
+            model: "gemini-1.5-flash",
+        });
+
         const prompt = `
-            You are a helpful cooking assistant.
+You are a helpful cooking assistant.
 
-            Using the following ingredients:
-            ${ingredients.join(", ")}
+Using ONLY these ingredients:
+${ingredients.join(", ")}
 
-            Generate ONE clear, easy recipe.
-            Include:
-            - Recipe name
-            - Ingredients list
-            - Step-by-step instructions
-            `;
+Generate ONE simple recipe.
 
-        const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`,
-            {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: prompt }] }],
-                }),
-            }
-        );
+Format:
+Recipe Name:
+Ingredients:
+Steps:
+`;
 
-        const data = await response.json();
-        console.log("Gemini raw response:", JSON.stringify(data, null, 2));
+        const result = await model.generateContent(prompt);
+        const response = result.response;
+        const text = response.text();
 
+        console.log("Gemini output:", text);
 
-        let recipe = "⚠️ No recipe generated.";
-
-        if (data?.candidates?.length) {
-            const parts = data.candidates[0]?.content?.parts;
-            if (Array.isArray(parts)) {
-                recipe = parts.map(p => p.text).join("\n");
-            }
-        }
-
-        res.status(200).json({ recipe });
+        res.status(200).json({
+            recipe: text && text.trim().length > 0
+                ? text
+                : "⚠️ No recipe generated.",
+        });
     } catch (error) {
         console.error("Gemini error:", error);
         res.status(500).json({
