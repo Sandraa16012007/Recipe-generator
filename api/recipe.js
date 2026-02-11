@@ -1,8 +1,10 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import Groq from "groq-sdk";
+
+const groq = new Groq({
+    apiKey: process.env.GROQ_API_KEY,
+});
 
 export default async function handler(req, res) {
-    console.log("API KEY EXISTS:", !!process.env.GEMINI_API_KEY);
-
     if (req.method !== "POST") {
         return res.status(405).json({ error: "Method not allowed" });
     }
@@ -11,46 +13,41 @@ export default async function handler(req, res) {
         const { ingredients } = req.body;
 
         if (!ingredients || ingredients.length === 0) {
-            return res.status(400).json({ error: "No ingredients provided" });
+            return res.status(400).json({
+                recipe: "⚠️ No ingredients provided.",
+            });
         }
-
-        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
-        const model = genAI.getGenerativeModel({
-            model: "models/gemini-1.5-flash",
-        });
 
         const prompt = `
 You are a helpful cooking assistant.
 
-Using ONLY these ingredients:
+Using ONLY the following ingredients:
 ${ingredients.join(", ")}
 
-Generate ONE simple recipe.
+Create ONE simple recipe.
+Include:
+- Recipe name
+- Ingredients list
+- Step-by-step instructions
+        `;
 
-Format:
-Recipe Name:
-Ingredients:
-Steps:
-`;
-
-        console.log("Sending prompt to Gemini...");
-        const result = await model.generateContent(prompt);
-        console.log("Gemini responded");
-        const response = result.response;
-        const text = response.text();
-
-        console.log("Gemini output:", text);
-
-        res.status(200).json({
-            recipe: text && text.trim().length > 0
-                ? text
-                : "⚠️ No recipe generated.",
+        const completion = await groq.chat.completions.create({
+            model: "llama3-8b-8192",
+            messages: [
+                { role: "user", content: prompt }
+            ],
+            temperature: 0.7,
         });
+
+        const recipe =
+            completion.choices?.[0]?.message?.content ||
+            "⚠️ No recipe generated.";
+
+        res.status(200).json({ recipe });
     } catch (error) {
-        console.error("Gemini error:", error);
+        console.error("Groq error:", error);
         res.status(500).json({
-            recipe: "⚠️ Something went wrong. Please try again.",
+            recipe: "⚠️ Server error while generating recipe.",
         });
     }
 }
