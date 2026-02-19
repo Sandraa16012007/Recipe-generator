@@ -48,7 +48,7 @@ export default function Recipe({ recipe, loading }) {
             <h3>Here's a recipe you can make with your ingredients:</h3>
             <div className="recipe-card">
                 <h1>{title}</h1>
-                <h2>Ingredients:</h2>
+                <h2 className="ingredients-title">Ingredients:</h2>
                 <ul>
                     {ingredients.map((ingredient, index) => (
                         <li key={index}>{ingredient}</li>
