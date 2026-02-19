@@ -34,7 +34,7 @@ export default function Recipe({ recipe, loading }) {
             } else if (currentSection === "ingredients" && line.startsWith("-")) {
                 ingredients.push(line.replace("-", "").trim());
             } else if (currentSection === "instructions") {
-                instructions.push(line.trim());
+                instructions.push(line.replace(/^\d+\.\s*/g, "").replace(/\{.*\}/g, "").trim());
             }
         });
 
