@@ -8,58 +8,80 @@ export default function Recipe({ recipe, loading }) {
         );
     }
 
-    if (!recipe) {
-        return null;
-    }
+    if (!recipe || typeof recipe !== "string") return null;
 
-    if (typeof recipe !== "string") {
-        return <p style={{ margin: "30px 0 0 0" }}>⚠️ Unexpected response format.</p>;
-    }
+    const lines = recipe.split("\n").map(l => l.trim()).filter(Boolean);
 
-    console.log(recipe);
-    const lines = recipe.split("\n").filter(line => line.trim() !== "");
     let title = "";
     let ingredients = [];
     let instructions = [];
+    let tips = [];
     let currentSection = null;
 
-    function formatRecipeText(text) {
-        lines.forEach(line => {
-            if (line.toLowerCase().startsWith("**recipe name")) {
-                title = line.replace(/\*\*/g, "").trim();
-            } else if (line.toLowerCase().startsWith("**ingredients")) {
-                currentSection = "ingredients";
-            } else if (line.toLowerCase().startsWith("**step-by-step instructions")) {
-                currentSection = "instructions";
-            } else if (currentSection === "ingredients" && line.startsWith("-")) {
-                ingredients.push(line.replace("-", "").trim());
-            } else if (currentSection === "instructions") {
-                instructions.push(line.replace(/^\d+\.\s*/g, "").replace(/\*\*}/g, "").trim());
-            }
-        });
+    lines.forEach(line => {
+        const cleanLine = line
+            .replace(/\*\*/g, "")           // remove **
+            .replace(/^\d+\.\s*/g, "")     // remove numbering
+            .trim();
 
-        console.log(title, ingredients, instructions);
-    }
-
-    formatRecipeText(recipe);
+        if (cleanLine.toLowerCase().startsWith("recipe name")) {
+            title = cleanLine.replace("Recipe Name:", "").trim();
+        }
+        else if (cleanLine.toLowerCase().startsWith("ingredients")) {
+            currentSection = "ingredients";
+        }
+        else if (cleanLine.toLowerCase().startsWith("step-by-step")) {
+            currentSection = "instructions";
+        }
+        else if (cleanLine.toLowerCase().startsWith("tips")) {
+            currentSection = "tips";
+        }
+        else if (currentSection === "ingredients" && line.startsWith("-")) {
+            ingredients.push(cleanLine.replace("-", "").trim());
+        }
+        else if (currentSection === "instructions") {
+            instructions.push(cleanLine);
+        }
+        else if (currentSection === "tips") {
+            tips.push(cleanLine.replace("-", "").trim());
+        }
+    });
 
     return (
         <section className="recipe">
-            <h3>Here's a recipe you can make with your ingredients:</h3>
+            <h3>Here’s a recipe you can make with your ingredients</h3>
+
             <div className="recipe-card">
-                <h1>{title}</h1>
-                <h2 className="ingredients-title" style={{textAlign: "left"}}>Ingredients:</h2>
-                <ul>
-                    {ingredients.map((ingredient, index) => (
-                        <li key={index}>{ingredient}</li>
-                    ))}
-                </ul>
-                <h2>Step-by-Step Instructions:</h2>
-                <ol>
-                    {instructions.map((instruction, index) => (
-                        <li key={index}>{instruction}</li>
-                    ))}
-                </ol>
+                <h1 className="recipe-title">{title}</h1>
+
+                <div className="recipe-section">
+                    <h2>Ingredients</h2>
+                    <ul>
+                        {ingredients.map((item, i) => (
+                            <li key={i}>{item}</li>
+                        ))}
+                    </ul>
+                </div>
+
+                <div className="recipe-section">
+                    <h2>Instructions</h2>
+                    <ol>
+                        {instructions.map((step, i) => (
+                            <li key={i}>{step}</li>
+                        ))}
+                    </ol>
+                </div>
+
+                {tips.length > 0 && (
+                    <div className="recipe-tips">
+                        <h2>Tips</h2>
+                        <ul>
+                            {tips.map((tip, i) => (
+                                <li key={i}>{tip}</li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
             </div>
         </section>
     );
