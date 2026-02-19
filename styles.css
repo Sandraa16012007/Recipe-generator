@@ -231,7 +231,6 @@ main{
     border-radius: 10px;
     background-color: #f0f0ff;
     box-shadow: 0 4px 8px rgba(54, 54, 198, 0.1);
-    text-align: center;
     font-family: "Vend Sans", sans-serif;
     color: #3636c6;
     font-size: 1.25rem;
@@ -274,6 +273,7 @@ main{
     margin-top: 10px;
     margin-bottom: 20px;
     color: #3636c6;
+    text-align: center;
 }
 
 .recipe-card h2{
@@ -286,6 +286,7 @@ main{
     list-style-type: disc;
     padding-left: 20px;
     margin-bottom: 15px;
+    font-size: 1rem;
 }
 
 .recipe-card ul li{
@@ -296,6 +297,7 @@ main{
     list-style-type: decimal;
     padding-left: 20px;
     margin-bottom: 15px;
+    font-size: 1rem;
 }
 
 .recipe-card ol li{
