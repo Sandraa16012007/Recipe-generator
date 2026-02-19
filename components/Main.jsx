@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ClaudeRecipe from "./ClaudeRecipe.jsx";
+import Recipe from "./Recipe.jsx";
 import IngredientsList from "./IngredientsList.jsx";
 
 export default function Main() {
@@ -32,6 +32,7 @@ export default function Main() {
             }
 
             const data = await res.json();
+            setRecipe(data.recipe);
 
             // Ensure recipe is always a string
             if (typeof data.recipe === "string") {
@@ -60,7 +61,7 @@ export default function Main() {
 
             {ingredients.length > 0 && <IngredientsList ingredients={ingredients} getRecipe={getRecipe} />}
 
-            {<ClaudeRecipe recipe={recipe} loading={loading} />}
+            {<Recipe recipe={recipe} loading={loading} />}
 
         </main>
     )
