@@ -242,8 +242,8 @@ main{
 
 .recipe h3{
     margin-bottom: 10px;
-    color: #3636c6;
-    font-size: 1.5rem;
+    color: #3636c6a1;
+    font-size: 1.2rem;
     text-align: center;
     margin-top: 20px;
     margin-bottom: 20px;
@@ -257,7 +257,6 @@ main{
     background-color: #fff;
     box-shadow: 0 4px 8px rgba(54, 54, 198, 0.1);
     margin-bottom: 20px;
-    text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -272,13 +271,14 @@ main{
 
 .recipe-card h1{
     font-size: 1.5rem;
-    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
     color: #3636c6;
 }
 
 .recipe-card h2{
     font-size: 1.25rem;
-    margin-bottom: 10px;
+    margin-bottom: 18px;
     color: #3636c6;
 }
 
