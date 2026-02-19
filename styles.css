@@ -282,10 +282,6 @@ main{
     text-align: center;
 }
 
-.ingredients-title{
-    text-align: left;
-}
-
 .recipe-card ul{
     list-style-type: disc;
     padding-left: 20px;
