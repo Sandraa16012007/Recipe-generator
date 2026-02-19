@@ -42,9 +42,6 @@ export default function Recipe({ recipe, loading }) {
         else if (currentSection === "instructions") {
             instructions.push(cleanLine);
         }
-        else if (currentSection === "tips") {
-            tips.push(cleanLine.replace("-", "").trim());
-        }
     });
 
     return (
@@ -72,16 +69,6 @@ export default function Recipe({ recipe, loading }) {
                     </ol>
                 </div>
 
-                {tips.length > 0 && (
-                    <div className="recipe-tips">
-                        <h2>Tips</h2>
-                        <ul>
-                            {tips.map((tip, i) => (
-                                <li key={i}>{tip}</li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
             </div>
         </section>
     );
