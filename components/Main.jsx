@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Recipe from "./Recipe.jsx";
 import IngredientsList from "./IngredientsList.jsx";
 
