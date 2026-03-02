@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Recipe from "./Recipe.jsx";
 import IngredientsList from "./IngredientsList.jsx";
 
@@ -16,6 +16,7 @@ export default function Main() {
 
     const [recipe, setRecipe] = useState("");
     const [loading, setLoading] = useState(false);
+    const recipeSection = useRef(null);
 
     async function getRecipe() {
         setLoading(true);
@@ -50,7 +51,11 @@ export default function Main() {
         }
     }
 
-
+    useEffect(() => {
+        if (recipe && recipeSection.current) {
+            recipeSection.current.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [recipe]);
 
     return (
         <main>
@@ -59,7 +64,7 @@ export default function Main() {
                 <button type="submit" className="add-button">+ Add Ingredients</button>
             </form>
 
-            {ingredients.length > 0 && <IngredientsList ingredients={ingredients} getRecipe={getRecipe} />}
+            {ingredients.length > 0 && <IngredientsList ref={recipeSection} ingredients={ingredients} getRecipe={getRecipe} />}
 
             {<Recipe recipe={recipe} loading={loading} />}
 
